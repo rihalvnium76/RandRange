@@ -4,8 +4,8 @@
 
 void rnd(int a,int b,int n) {
   //random numbers create and output
-  //a:min val
-  //b:max val
+  //a:min value
+  //b:max value
   //n:random number,when n is less than 0,it represents the sum of n random numbers
   printf("> ");
   if (n < 0) {
