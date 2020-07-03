@@ -13,7 +13,7 @@
 #include<exception> // exception
 
 #define RNDRG_VERSION "1.5.6 - CLI Demo"
-// µ÷ÊÔÊä³ö
+// è°ƒè¯•è¾“å‡º
 #define dbgt(T) const char *TAG = #T;
 #define dbgoe(M, FMT, ...) fprintf(stderr, "[" #M "]%s#%d: " FMT, TAG, __LINE__, ##__VA_ARGS__);
 #define dbgos(M, FMT, ...) printf("[" #M "]%s#%d: " FMT, TAG, __LINE__, ##__VA_ARGS__);
@@ -69,7 +69,7 @@ namespace Module {
         xoshiro256ss x256ss;
         unsigned int seed;
     public:
-        // ÉèÖÃÖÖ×Ó
+        // è®¾ç½®ç§å­
         RNDRG(unsigned int seed = time(NULL)) {
             Seed(seed);
         }
@@ -83,38 +83,38 @@ namespace Module {
             return this->seed;
         }
 
-        // Ëæ»úÕûÊı£¬[0,0xFFFFFFFF]
+        // éšæœºæ•´æ•°ï¼Œ[0,0xFFFFFFFF]
         inline uint64_t RI() {
             return x256ss.next();
         }
-        // Ëæ»ú¸¡µãÊı£¬[0,1)
+        // éšæœºæµ®ç‚¹æ•°ï¼Œ[0,1)
         inline double RF() {
             const union { uint64_t i; double d; } u = { .i = UINT64_C(0x3FF) << 52 | RI() >> 12 };
             return u.d - 1.0;
         }
 
-        // ·µ»Ø·¶Î§Îª[a,b]µÄËæ»úÕûÊı
+        // è¿”å›èŒƒå›´ä¸º[a,b]çš„éšæœºæ•´æ•°
         int ir(int a, int b) {
             return RI() % (b-a+1) + a;
         }
-        // ·µ»Øn¸ö·¶Î§Îª[a,b]µÄËæ»úÕûÊıÖ®ºÍ
+        // è¿”å›nä¸ªèŒƒå›´ä¸º[a,b]çš„éšæœºæ•´æ•°ä¹‹å’Œ
         int irs(int a, int b, int n) {
             int s = 0;
             for(int i=0; i<n; ++i) s += ir(a, b);
             return s;
         }
-        // ·µ»Ø·¶Î§Îª[a,b)µÄËæ»ú¸¡µãÊı
+        // è¿”å›èŒƒå›´ä¸º[a,b)çš„éšæœºæµ®ç‚¹æ•°
         double fr(double a, double b) {	
             return RF() * (b-a) + a;
         }
-        // ·µ»Øn¸ö·¶Î§Îª[a,b)µÄËæ»ú¸¡µãÊıÖ®ºÍ
+        // è¿”å›nä¸ªèŒƒå›´ä¸º[a,b)çš„éšæœºæµ®ç‚¹æ•°ä¹‹å’Œ
         double frs(double a, double b, int n) {
             double s = 0;
             for(int i=0; i<n; ++i) s += fr(a, b);
             return s;
         }
 
-        //¾«¶ÈÏŞÖÆ¡£aÊı×Ö£¬dĞ¡ÊıÎ»Êı,d<0²»ÏŞÖÆ
+        //ç²¾åº¦é™åˆ¶ã€‚aæ•°å­—ï¼Œdå°æ•°ä½æ•°,d<0ä¸é™åˆ¶
         static double pl(double a,int d) {
             if(d>=0) {
                 double s=pow(10,d);
@@ -162,10 +162,10 @@ namespace Module {
     RNDRG Dice;
 
     /* Tool Function/Class  */
-    static inline void ClearStdin() { // Çå¿ÕÊäÈë»º³åÇø
+    static inline void ClearStdin() { // æ¸…ç©ºè¾“å…¥ç¼“å†²åŒº
         scanf("%*[^'\n']%*c");
     }
-    void Trim(char *s) { // È¥Ê×Î²¿Õ°××Ö·û£¬²ÎÊı²»ÄÜÎª×Ö·û³£Á¿
+    void Trim(char *s) { // å»é¦–å°¾ç©ºç™½å­—ç¬¦ï¼Œå‚æ•°ä¸èƒ½ä¸ºå­—ç¬¦å¸¸é‡
         char *p = (char *)1, *q = 0, *c;
         for (c = s; *c; ++c) if (!isspace(*c)) p = q ? p : c, q = c;
         for (c = s; p <= q; *c++ = *p++);
@@ -185,18 +185,18 @@ namespace Module {
             if(str) delete[] str;
         }
         char *GetNextPos() { return nextPos; }
-        // ÇĞ¸î×Ö·û´®
-        // ·µ»ØÖµ£ºÖ¸ÏòÏÂ¸ö¼ÇºÅÆğÊ¼µÄÖ¸Õë
-        // delim ·Ö¸ô·û
-        // ignoreIncludedDelim ÊÇ·ñºöÂÔ°üÔÚÀ¨ºÅ»òÒıºÅÄÚµÄ·Ö¸ô·û
+        // åˆ‡å‰²å­—ç¬¦ä¸²
+        // è¿”å›å€¼ï¼šæŒ‡å‘ä¸‹ä¸ªè®°å·èµ·å§‹çš„æŒ‡é’ˆ
+        // delim åˆ†éš”ç¬¦
+        // ignoreIncludedDelim æ˜¯å¦å¿½ç•¥åŒ…åœ¨æ‹¬å·æˆ–å¼•å·å†…çš„åˆ†éš”ç¬¦
         char *SplitByChar(char delim, bool ignoreIncludedDelim) {
-            // ÊÇ·ñÎªÓĞ×Ö·û´®»òµ½½áÎ²
+            // æ˜¯å¦ä¸ºæœ‰å­—ç¬¦ä¸²æˆ–åˆ°ç»“å°¾
             if(!curPos || !curPos[0]) return NULL;
             int balance[5]={}; // " ' ( [ {
             char c;
-            // p1 curPos´Ó·Ö¸ô·ûÉ¨µ½ÆÕÍ¨×Ö·û
+            // p1 curPosä»åˆ†éš”ç¬¦æ‰«åˆ°æ™®é€šå­—ç¬¦
             for(; *curPos && *curPos==delim; ++curPos) *curPos = '\0';
-            // p2 nextPos´ÓÆÕÍ¨×Ö·ûÉ¨µ½·Ö¸ô·û
+            // p2 nextPosä»æ™®é€šå­—ç¬¦æ‰«åˆ°åˆ†éš”ç¬¦
             for(nextPos = curPos; c = *nextPos; ++nextPos) {
                 bool isBalance = !ignoreIncludedDelim || (ignoreIncludedDelim && !(balance[0] || balance[1] || balance[2] || balance[3] || balance[4]));
                 if(c==delim && isBalance) {
@@ -227,8 +227,8 @@ namespace Module {
         }
     }; // class Split
 
-    // Base64¼Ó½âÃÜ
-    // ´úÂëÔ´×Ôhttps://github.com/zhicheng/base64
+    // Base64åŠ è§£å¯†
+    // ä»£ç æºè‡ªhttps://github.com/zhicheng/base64
     namespace Base64Code {
         // NOTICE: str_len = size + 1
         static const char
@@ -373,8 +373,8 @@ namespace Module {
         }
     } // namespace Base64Code
 
-    // Baseplus64¼Ó½âÃÜ
-    // ÒÀÀµ´úÂë£ºÉÏÊöµÄBase64¼Ó½âÃÜº¯Êı
+    // Baseplus64åŠ è§£å¯†
+    // ä¾èµ–ä»£ç ï¼šä¸Šè¿°çš„Base64åŠ è§£å¯†å‡½æ•°
     class Baseplus64Code {
         std::string str;
         inline static const char* bp64EnTable() {
@@ -423,13 +423,13 @@ namespace Module {
             return vAlpha;
         }
     public:
-        // TODO È«¾Ö¿Õ×Ö·û´®¼ì²â
-        // sÎªĞèÒª´¦ÀíµÄ¼Ó/½âÃÜ×Ö·û´®
+        // TODO å…¨å±€ç©ºå­—ç¬¦ä¸²æ£€æµ‹
+        // sä¸ºéœ€è¦å¤„ç†çš„åŠ /è§£å¯†å­—ç¬¦ä¸²
         Baseplus64Code(const char *s) : str(s) {}
-        // »ñÈ¡½á¹û
+        // è·å–ç»“æœ
         std::string GetResult() { return str; }
 
-        // ÎÄ±¾->Base64
+        // æ–‡æœ¬->Base64
         Baseplus64Code& Base64Encode() {
             char *t; int len = str.length();
             t = new char[Base64Code::BASE64_ENCODE_OUT_SIZE(len)];
@@ -438,8 +438,8 @@ namespace Module {
             delete[] t;
             return *this;
         }
-        // Base64->ÎÄ±¾
-        // ¸ñÊ½£ºµÈºÅÊıÁ¿±êÊ¶·û(1Î»£¬R0/W1/X2)+[±ê¼ÇĞ¡/´óĞ´×ÖÄ¸Î»ÖÃÄ£Ê½(1Î»,AB,CD,EF...YZÑ­»·)+Ğ¡/´óĞ´×ÖÄ¸Î»ÖÃ(0-18Î»£¬³ıÈ¥×÷Îª·Ö¸ô·ûµÄ×ÖÄ¸)+·Ö¸ô·û(1Î»,Z,Y,X...AÑ­»·)+È«Ğ¡/´óĞ´µÄBase64±àÂëÆ¬¶Î(35Î»)]*n
+        // Base64->æ–‡æœ¬
+        // æ ¼å¼ï¼šç­‰å·æ•°é‡æ ‡è¯†ç¬¦(1ä½ï¼ŒR0/W1/X2)+[æ ‡è®°å°/å¤§å†™å­—æ¯ä½ç½®æ¨¡å¼(1ä½,AB,CD,EF...YZå¾ªç¯)+å°/å¤§å†™å­—æ¯ä½ç½®(0-18ä½ï¼Œé™¤å»ä½œä¸ºåˆ†éš”ç¬¦çš„å­—æ¯)+åˆ†éš”ç¬¦(1ä½,Z,Y,X...Aå¾ªç¯)+å…¨å°/å¤§å†™çš„Base64ç¼–ç ç‰‡æ®µ(35ä½)]*n
         Baseplus64Code& Base64Decode() {
             char *t; int len = str.length();
             t = new char[Base64Code::BASE64_DECODE_OUT_SIZE(len)];
@@ -452,53 +452,53 @@ namespace Module {
         Baseplus64Code& ConvertBase64ToBp() {
             std::string ret;
             int len = str.length();
-            if(!len) { str.clear(); return *this; } // ¿Õ×Ö·û´®
+            if(!len) { str.clear(); return *this; } // ç©ºå­—ç¬¦ä¸²
             const char *s = str.c_str();
-            /* µÚ1¸ö×Ö·û µÈºÅ±ê¼Ç */
+            /* ç¬¬1ä¸ªå­—ç¬¦ ç­‰å·æ ‡è®° */
             char padFlag = 'R';
             if(s[len-1]=='=') {
                 padFlag = 'W';
                 if(s[len-2]=='=') padFlag = 'X';
             }
             ret = padFlag;
-            /* Ã¿35¸öBase64×Ö·ûÒ»×é */
-            // ´óĞ¡Ğ´±ê¼Ç ·Ö¸ô·û±ê¼Ç
-            int caseFlagIndex = 0, delimFlagIndex = 35; // ³õÊ¼ A 9
-            /* °´×éĞ´Èë´óĞ¡Ğ´±ê¼Ç(1) Î»ÖÃ±ê¼Ç(0-17 AB BC) ·Ö¸ô·û(1) È«´óĞ´Base64×Ö·û(35) */
+            /* æ¯35ä¸ªBase64å­—ç¬¦ä¸€ç»„ */
+            // å¤§å°å†™æ ‡è®° åˆ†éš”ç¬¦æ ‡è®°
+            int caseFlagIndex = 0, delimFlagIndex = 35; // åˆå§‹ A 9
+            /* æŒ‰ç»„å†™å…¥å¤§å°å†™æ ‡è®°(1) ä½ç½®æ ‡è®°(0-17 AB BC) åˆ†éš”ç¬¦(1) å…¨å¤§å†™Base64å­—ç¬¦(35) */
             for(int stPos = 0; stPos<len;) {
                 // init
-                int nxPos = stPos + 35; // ÏÂÒ»×é¿ªÊ¼Î»ÖÃ
-                bool isUpperMore; // ÊÇ·ñ´óĞ´×ÖÄ¸¸ü¶à
-                // µÚÒ»±éÉ¨´óĞ¡Ğ´ÊıÁ¿È¡Ğ¡Õß
+                int nxPos = stPos + 35; // ä¸‹ä¸€ç»„å¼€å§‹ä½ç½®
+                bool isUpperMore; // æ˜¯å¦å¤§å†™å­—æ¯æ›´å¤š
+                // ç¬¬ä¸€éæ‰«å¤§å°å†™æ•°é‡å–å°è€…
                 int upperNum = 0, lowerNum = 0;
                 for(int i=stPos; i<nxPos; ++i) {
                     char c = s[i];
                     if(isupper(c)) ++upperNum;
                     else if(islower(c)) ++lowerNum;
                     else if(isdigit(c) || c=='+' || c=='/' || c=='=');
-                    else if(c=='\0') break; // ½áÎ²
+                    else if(c=='\0') break; // ç»“å°¾
                     else goto FuncFailed;
                 }
                 isUpperMore = upperNum>lowerNum;
-                // Ñ¡Ôñ´óĞ´/Ğ¡Ğ´ÊıÁ¿ÉÙµÄ¼ÇÂ¼
+                // é€‰æ‹©å¤§å†™/å°å†™æ•°é‡å°‘çš„è®°å½•
                 ret.push_back(bp64EnTable()[isUpperMore? caseFlagIndex+1 :caseFlagIndex]);
-                // µÚ¶ş±éÉ¨´óĞ¡Ğ´Î»ÖÃºÍ×ª»»Ğ¡Ğ´Îª´óĞ´
-                std::string procStr; // ´óĞ´×ª»»¹ıµÄBase64×Ö·û
+                // ç¬¬äºŒéæ‰«å¤§å°å†™ä½ç½®å’Œè½¬æ¢å°å†™ä¸ºå¤§å†™
+                std::string procStr; // å¤§å†™è½¬æ¢è¿‡çš„Base64å­—ç¬¦
                 for(int i=stPos; i<nxPos; ++i) {
                     char c = s[i];
                     int n;
                     if(c=='\0' || c=='=') break;
                     if(c=='+') c = '_';
                     else if(c=='/') c = '.';
-                    procStr.push_back(toupper(c)); // ×ª»»Îª´óĞ´²¢Ğ´Èë»º´æ
-                    // ¸ù¾İ´óĞ¡Ğ´±ê¼Ç¼ÇÂ¼´ó/Ğ¡Ğ´×ÖÄ¸Î»ÖÃ
+                    procStr.push_back(toupper(c)); // è½¬æ¢ä¸ºå¤§å†™å¹¶å†™å…¥ç¼“å­˜
+                    // æ ¹æ®å¤§å°å†™æ ‡è®°è®°å½•å¤§/å°å†™å­—æ¯ä½ç½®
                     if((isUpperMore && islower(c)) || (!isUpperMore && isupper(c))) {
-                        // ¼ÆËã³ı¿ª·Ö¸ô·ûµÄÆ«ÒÆ
+                        // è®¡ç®—é™¤å¼€åˆ†éš”ç¬¦çš„åç§»
                         n = i%35; n = n>=delimFlagIndex? n+1: n;
                         ret.push_back(bp64EnTable()[n]);
                     }
                 }
-                // Ğ´Èë·Ö¸ô·ûºÍÈ«´óĞ´µÄBase64×Ö·û
+                // å†™å…¥åˆ†éš”ç¬¦å’Œå…¨å¤§å†™çš„Base64å­—ç¬¦
                 ret += bp64EnTable()[delimFlagIndex] + procStr;
                 // next
                 stPos = nxPos;
@@ -519,24 +519,24 @@ namespace Module {
             std::string ret;
             int len = str.length();
             const char *s = str.c_str();
-            // ´óĞ¡Ğ´±êÖ¾ ·Ö¸ô·û±êÖ¾
+            // å¤§å°å†™æ ‡å¿— åˆ†éš”ç¬¦æ ‡å¿—
             int caseFlagIndex = 0, delimFlagIndex = 35;
 
-            /* µÚ1¸ö±ê¼Ç µÈºÅÊıÁ¿ */
+            /* ç¬¬1ä¸ªæ ‡è®° ç­‰å·æ•°é‡ */
             char pads[3] = {}, c0 = toupper(s[0]);
             if(c0=='R') ;
             else if(c0=='W') pads[0] = '=';
             else if(c0=='X') { pads[0] = '='; pads[1] = '='; }
             else goto FuncFailed;
-            // ½âÎö Î»ÖÃ±ê¼Ç ·Ö¸ô·û 35Î»×ª»»µÄÔ­Ê¼×Ö·û
+            // è§£æ ä½ç½®æ ‡è®° åˆ†éš”ç¬¦ 35ä½è½¬æ¢çš„åŸå§‹å­—ç¬¦
             for(int stPos=1; stPos<len;) {
-                /* ´óĞ¡Ğ´±ê¼Ç */
+                /* å¤§å°å†™æ ‡è®° */
                 bool isUpper;
                 int c1 = bp64DeTable()[(unsigned char)s[stPos]];
                 if(c1==caseFlagIndex) isUpper = true;
                 else if(c1==caseFlagIndex+1) isUpper = false;
                 else goto FuncFailed;
-                // Ñ°ÕÒ·Ö¸ô·û
+                // å¯»æ‰¾åˆ†éš”ç¬¦
                 int delimPos = -1;
                 for(int i=stPos+1; i<len; ++i)
                     if(bp64DeTable()[(unsigned char)s[i]]==delimFlagIndex) {
@@ -544,22 +544,22 @@ namespace Module {
                         break;
                     }
                 if(delimPos==-1) goto FuncFailed;
-                // ¸´ÖÆ´ı×ª»»´ıĞ¡Ğ´×Ö·û´®
+                // å¤åˆ¶å¾…è½¬æ¢å¾…å°å†™å­—ç¬¦ä¸²
                 std::string procStr;
                 for(int i=delimPos+1, n=i+35; i<n && i<len; ++i) {
                     char c = s[i];
-                    // Ô¤´¦Àí
+                    // é¢„å¤„ç†
                     if(isalnum(c)) procStr.push_back(isUpper? tolower(c): toupper(c));
                     else if(c=='_') procStr.push_back('+');
                     else if(c=='.') procStr.push_back('/');
                     else goto FuncFailed;
                 }
-                // »¹Ô­´óĞ¡Ğ´
+                // è¿˜åŸå¤§å°å†™
                 int procStrLen = procStr.size();
-                for(int i=stPos+1; i<delimPos; ++i) { // ×éµÚ1¸öÎª´óĞ¡Ğ´±ê¼Ç
+                for(int i=stPos+1; i<delimPos; ++i) { // ç»„ç¬¬1ä¸ªä¸ºå¤§å°å†™æ ‡è®°
                     int p = bp64DeTable()[(unsigned char)s[i]];
                     if(p<36 && p<procStrLen) {
-                        // »¹Ô­Æ«ÒÆ
+                        // è¿˜åŸåç§»
                         p = p>delimFlagIndex? p-1: p;
                         char c = procStr[p];
                         procStr[p] = isUpper? toupper(c): tolower(c);
@@ -583,11 +583,11 @@ namespace Module {
             return *this;
         }
 
-        // Bp64Î¬¼ªÄáÑÇ¼ÓÃÜ
-        // TODO ¼ÓÉÏÔ¤´¦Àítoupper()
-        /* ·½·¨
-            Ã÷ÎÄ¡¢Ô¿³×½ÔÓÃBp64±àÂë
-            Ê¹ÓÃ±äÖÖÎ¬¼ªÄáÑÇÃÜÂë±àÂë
+        // Bp64ç»´å‰å°¼äºšåŠ å¯†
+        // TODO åŠ ä¸Šé¢„å¤„ç†toupper()
+        /* æ–¹æ³•
+            æ˜æ–‡ã€é’¥åŒ™çš†ç”¨Bp64ç¼–ç 
+            ä½¿ç”¨å˜ç§ç»´å‰å°¼äºšå¯†ç ç¼–ç 
             #ABCD....012...9
             AZYXWVU..987...0
         */
@@ -601,9 +601,9 @@ namespace Module {
             int keyLen = strlen(key), tbLen = strlen(vigenereTable());
 
             for(int i=0, j=0; i<textLen; ++i, ++j) {
-                if(j>=keyLen) j = 0; // Ñ­»·ÃÜÔ¿
+                if(j>=keyLen) j = 0; // å¾ªç¯å¯†é’¥
                 int x = -1, y = -1;
-                for(int k=0; k<tbLen; ++k) { // É¨×ÖÄ¸±í
+                for(int k=0; k<tbLen; ++k) { // æ‰«å­—æ¯è¡¨
                     char c = vigenereTable()[k];
                     if(x==-1 && c==key[j]) x = k;
                     if(y==-1 && c==text[i]) y = k;
@@ -616,7 +616,7 @@ namespace Module {
             str = ret;
             return *this;
         }
-        // Bp64Î¬¼ªÄáÑÇ½âÃÜ
+        // Bp64ç»´å‰å°¼äºšè§£å¯†
         Baseplus64Code& DecryptBp(const char *pwd) {
             int textLen = str.size();
             if(textLen==0 || !pwd || pwd[0]=='\0') { str.clear(); return *this; }
@@ -627,9 +627,9 @@ namespace Module {
             int keyLen = strlen(key), tbLen = strlen(vigenereTable());
 
             for(int i=0, j=0; i<textLen; ++i, ++j) {
-                if(j>=keyLen) j = 0; // Ñ­»·ÃÜÔ¿
+                if(j>=keyLen) j = 0; // å¾ªç¯å¯†é’¥
                 int x = -1, y = -1;
-                for(int k=0; k<tbLen; ++k) { // É¨×ÖÄ¸±í ³¤¶È36
+                for(int k=0; k<tbLen; ++k) { // æ‰«å­—æ¯è¡¨ é•¿åº¦36
                     char c = vigenereTable()[k];
                     if(x==-1 && c==key[j]) x = k;
                     if(x!=-1 && y==-1 && c==text[i]) y = k;
@@ -644,7 +644,7 @@ namespace Module {
         }
 
         static void Test() {
-            Baseplus64Code bs("OPenVPn²âÊÔ");
+            Baseplus64Code bs("OPenVPnæµ‹è¯•");
             printf("%s|\n",bs.Base64Encode().GetResult().c_str());
             printf("%s|\n",bs.ConvertBase64ToBp().GetResult().c_str());
             printf("%s|\n",bs.EncryptBp("lzstupid").GetResult().c_str());
@@ -665,84 +665,84 @@ namespace Module {
 } // namespace Module
 
 namespace Core {
-    // UIÀà
+    // UIç±»
     class UI_v1c {
         friend bool CmdArgsParser(UI_v1c&, int&, char**&);
-        /* ×´Ì¬¼¯ºÏ */
-        static const int IN_BUF_LEN = 512; // ÊäÈë»º³åÇø³¤¶È
+        /* çŠ¶æ€é›†åˆ */
+        static const int IN_BUF_LEN = 512; // è¾“å…¥ç¼“å†²åŒºé•¿åº¦
         struct {
-            char InputBuffer[UI_v1c::IN_BUF_LEN]; // ÊäÈë»º³åÇø
-            bool StrictMode; // ÑÏ¸ñÄ£Ê½
-            bool DebugMode; // µ÷ÊÔÄ£Ê½
-            bool ColonOrderMode; // ÓÃ:´úÌæ.½øÈëÃüÁîÄ£Ê½
-            bool ConsoleMode; // ÃüÁîĞĞÄ£Ê½£¨ÌØÊâ£©
-            Module::Split *Args; // Ö¸Áî·Ö¸î
+            char InputBuffer[UI_v1c::IN_BUF_LEN]; // è¾“å…¥ç¼“å†²åŒº
+            bool StrictMode; // ä¸¥æ ¼æ¨¡å¼
+            bool DebugMode; // è°ƒè¯•æ¨¡å¼
+            bool ColonOrderMode; // ç”¨:ä»£æ›¿.è¿›å…¥å‘½ä»¤æ¨¡å¼
+            bool ConsoleMode; // å‘½ä»¤è¡Œæ¨¡å¼ï¼ˆç‰¹æ®Šï¼‰
+            Module::Split *Args; // æŒ‡ä»¤åˆ†å‰²
         } state;
-        // _parseIns() ÍË³öÂë
+        // _parseIns() é€€å‡ºç 
         enum {
             PROGRAM_CONTINUE,
             PROGRAM_EXIT
         };
     public:
-        // Ö¸Áî°ïÖú
+        // æŒ‡ä»¤å¸®åŠ©
         void orderHelp() {
             puts(
-                "ËµÃ÷£º\nÖ¸Áî ²ÎÊı\n\tËµÃ÷\n´ø<>µÄ²ÎÊı±íÊ¾±ØÌî£¬´ø[]µÄ²ÎÊı±íÊ¾¿É²»Ìî\n\n"
+                "è¯´æ˜ï¼š\næŒ‡ä»¤ å‚æ•°\n\tè¯´æ˜\nå¸¦<>çš„å‚æ•°è¡¨ç¤ºå¿…å¡«ï¼Œå¸¦[]çš„å‚æ•°è¡¨ç¤ºå¯ä¸å¡«\n\n"
                 "<a> <b> <n>\n.pl <d> <a> <b> <n>\n"
-                "\tÉú³ÉËæ»úÊı\n\t²ÎÊı£ºa:×îĞ¡Öµ£¬b×î´óÖµÎªb£¬n:Éú³É¸öÊı£¬d:Êä³öĞ¡ÊıµÄÎ»Êı\n"
-                "\tn<0Ê±ÔòÉú³É|n|¸öËæ»úÊı²¢ÀÛ¼Ó£¬a»òbÎªĞ¡ÊıÊ±ÔòÉú³ÉËæ»ú¸¡µãÊı\n"
-                "\tËµÃ÷£º¿ªÆôÑÏ¸ñÊ±½ûÓÃµÚÒ»ÖÖ²»´øÖ¸ÁîµÄËæ»úÊıÉú³É·½Ê½\n"
-                ".m<mode>\n\tÉèÖÃ»·¾³Ä£Ê½\n\t²ÎÊı£ºmode¿ÉÎªÒÔÏÂÖµ:\n"
-                "\t\ts\t¿ªÆô/¹Ø±ÕÑÏ¸ñÄ£Ê½\n\t\tc\tÊ¹ÓÃ/È¡Ïû:´úÌæ.½øÈëÃüÁîÄ£Ê½\n\t\td\t¿ªÆô/¹Ø±Õµ÷ÊÔÄ£Ê½\n"
-                ".sd [seed]\n\tÉèÖÃ/ÏÔÊ¾Ëæ»úÊıÉú³ÉÆ÷ÖÖ×Ó\n\t²ÎÊı£ºseed:ĞÂµÄÖÖ×ÓÖµ(uintÀàĞÍ)\n\tËµÃ÷£ºÊ¡ÂÔseedÏÔÊ¾µ±Ç°ÖÖ×ÓÖµ\n"
-                ".r <code>\n\t¡¾Î´ÆôÓÃ¡¿Ö´ĞĞ¼ÆËã½Å±¾\n"
-                ".h[extension]\n\tÏÔÊ¾°ïÖú\n\tËµÃ÷£ºÊ¡ÂÔextensionÔòÏÔÊ¾ÃüÁî°ïÖú\n"
-                "\textension¿ÉÎªÒÔÏÂÖµ£º\n"
-                "\t\tc\t¡¾Î´ÆôÓÃ¡¿ÏÔÊ¾ÃüÁîĞĞ°ïÖú\n\t\tt\tÏÔÊ¾¿ÉÓÃµÄÄÚÖÃ¹¤¾ß\n\t\ts\t¡¾Î´ÆôÓÃ¡¿ÏÔÊ¾¼ÆËã½Å±¾ÓïÑÔÓï·¨\n"
-                ".tl <tool> [args]\n\tÔËĞĞÄÚÖÃ¹¤¾ß\n\t²ÎÊı£ºtool:¹¤¾ßÃû£¬args¹¤¾ß²ÎÊı\n\tËµÃ÷£º¿ÉÓÃÄÚÖÃ¹¤¾ßÁĞ±í¼û.htÃüÁî\n"
-                "#[string]\n\t×¢ÊÍ\n\t²ÎÊı£ºstring:×¢ÊÍÎÄ×Ö\n.q\n\tÍË³ö\n"
+                "\tç”Ÿæˆéšæœºæ•°\n\tå‚æ•°ï¼ša:æœ€å°å€¼ï¼Œbæœ€å¤§å€¼ä¸ºbï¼Œn:ç”Ÿæˆä¸ªæ•°ï¼Œd:è¾“å‡ºå°æ•°çš„ä½æ•°\n"
+                "\tn<0æ—¶åˆ™ç”Ÿæˆ|n|ä¸ªéšæœºæ•°å¹¶ç´¯åŠ ï¼Œaæˆ–bä¸ºå°æ•°æ—¶åˆ™ç”Ÿæˆéšæœºæµ®ç‚¹æ•°\n"
+                "\tè¯´æ˜ï¼šå¼€å¯ä¸¥æ ¼æ—¶ç¦ç”¨ç¬¬ä¸€ç§ä¸å¸¦æŒ‡ä»¤çš„éšæœºæ•°ç”Ÿæˆæ–¹å¼\n"
+                ".m<mode>\n\tè®¾ç½®ç¯å¢ƒæ¨¡å¼\n\tå‚æ•°ï¼šmodeå¯ä¸ºä»¥ä¸‹å€¼:\n"
+                "\t\ts\tå¼€å¯/å…³é—­ä¸¥æ ¼æ¨¡å¼\n\t\tc\tä½¿ç”¨/å–æ¶ˆ:ä»£æ›¿.è¿›å…¥å‘½ä»¤æ¨¡å¼\n\t\td\tå¼€å¯/å…³é—­è°ƒè¯•æ¨¡å¼\n"
+                ".sd [seed]\n\tè®¾ç½®/æ˜¾ç¤ºéšæœºæ•°ç”Ÿæˆå™¨ç§å­\n\tå‚æ•°ï¼šseed:æ–°çš„ç§å­å€¼(uintç±»å‹)\n\tè¯´æ˜ï¼šçœç•¥seedæ˜¾ç¤ºå½“å‰ç§å­å€¼\n"
+                ".r <code>\n\tã€æœªå¯ç”¨ã€‘æ‰§è¡Œè®¡ç®—è„šæœ¬\n"
+                ".h[extension]\n\tæ˜¾ç¤ºå¸®åŠ©\n\tè¯´æ˜ï¼šçœç•¥extensionåˆ™æ˜¾ç¤ºå‘½ä»¤å¸®åŠ©\n"
+                "\textensionå¯ä¸ºä»¥ä¸‹å€¼ï¼š\n"
+                "\t\tc\tã€æœªå¯ç”¨ã€‘æ˜¾ç¤ºå‘½ä»¤è¡Œå¸®åŠ©\n\t\tt\tæ˜¾ç¤ºå¯ç”¨çš„å†…ç½®å·¥å…·\n\t\ts\tã€æœªå¯ç”¨ã€‘æ˜¾ç¤ºè®¡ç®—è„šæœ¬è¯­è¨€è¯­æ³•\n"
+                ".tl <tool> [args]\n\tè¿è¡Œå†…ç½®å·¥å…·\n\tå‚æ•°ï¼štool:å·¥å…·åï¼Œargså·¥å…·å‚æ•°\n\tè¯´æ˜ï¼šå¯ç”¨å†…ç½®å·¥å…·åˆ—è¡¨è§.htå‘½ä»¤\n"
+                "#[string]\n\tæ³¨é‡Š\n\tå‚æ•°ï¼šstring:æ³¨é‡Šæ–‡å­—\n.q\n\té€€å‡º\n"
             );
         }
-        // ¹¤¾ß°ïÖú
+        // å·¥å…·å¸®åŠ©
         void toolHelp() {
             puts(
-                "ÄÚÖÃ¹¤¾ßÁĞ±í£º\n\nosuc <Íæ¼Ò1·ÖÊı>,<Íæ¼Ò1×¼È·ÂÊ>[,<Íæ¼Ò2·ÖÊı>,<Íæ¼Ò2×¼È·ÂÊ>...]\n"
-                "\t\t×ÔÖÆosu!Ëæ»úÊı¼ÓÈ¨·ÖÊı¼ÆËãÆ÷\n"
-                ".b64x <flag>,<string>,[password]\n\tBase64±àÂë/½âÂë\n\t²ÎÊı£ºflag:Ë³ĞòÖ´ĞĞµÄÃüÁî¡£Ö§³ÖµÄÃüÁî£º\n"
-                "\t\ta\tBase64±àÂë\n\t\tb\tBase64½âÂë\n"
-                "\t\tc\tBase64×ªBaseplus64\n\t\td\tBaseplus64×ªBase64\n"
-                "\t\te\t¶ÔBaseplus64±àÂëÊ¹ÓÃ±äÖÖÎ¬¼ªÄáÑÇÃÜÂë¼ÓÃÜ\n\t\tf\t¶ÔBaseplus64±àÂëÊ¹ÓÃ±äÖÖÎ¬¼ªÄáÑÇÃÜÂë½âÂë\n"
-                "\tstring\tÒª±àÂëµÄ×Ö·û´®£¬»òÒª½âÂëµÄ×Ö·û´®£¬ÒªÓÃË«ÒıºÅÀ¨Æğ\n"
-                "\tpassword\tÖ´ĞĞÎ¬¼ªÄáÑÇÃÜÂë¼Ó½âÃÜËùĞèµÄÃÜÔ¿£¬ÒªÓÃË«ÒıºÅÀ¨Æğ\n"
+                "å†…ç½®å·¥å…·åˆ—è¡¨ï¼š\n\nosuc <ç©å®¶1åˆ†æ•°>,<ç©å®¶1å‡†ç¡®ç‡>[,<ç©å®¶2åˆ†æ•°>,<ç©å®¶2å‡†ç¡®ç‡>...]\n"
+                "\t\tè‡ªåˆ¶osu!éšæœºæ•°åŠ æƒåˆ†æ•°è®¡ç®—å™¨\n"
+                ".b64x <flag>,<string>,[password]\n\tBase64ç¼–ç /è§£ç \n\tå‚æ•°ï¼šflag:é¡ºåºæ‰§è¡Œçš„å‘½ä»¤ã€‚æ”¯æŒçš„å‘½ä»¤ï¼š\n"
+                "\t\ta\tBase64ç¼–ç \n\t\tb\tBase64è§£ç \n"
+                "\t\tc\tBase64è½¬Baseplus64\n\t\td\tBaseplus64è½¬Base64\n"
+                "\t\te\tå¯¹Baseplus64ç¼–ç ä½¿ç”¨å˜ç§ç»´å‰å°¼äºšå¯†ç åŠ å¯†\n\t\tf\tå¯¹Baseplus64ç¼–ç ä½¿ç”¨å˜ç§ç»´å‰å°¼äºšå¯†ç è§£ç \n"
+                "\tstring\tè¦ç¼–ç çš„å­—ç¬¦ä¸²ï¼Œæˆ–è¦è§£ç çš„å­—ç¬¦ä¸²ï¼Œè¦ç”¨åŒå¼•å·æ‹¬èµ·\n"
+                "\tpassword\tæ‰§è¡Œç»´å‰å°¼äºšå¯†ç åŠ è§£å¯†æ‰€éœ€çš„å¯†é’¥ï¼Œè¦ç”¨åŒå¼•å·æ‹¬èµ·\n"
 
             );
         }
-        // ÃüÁîĞĞ°ïÖú
+        // å‘½ä»¤è¡Œå¸®åŠ©
         void CLIHelp() {
             puts(
                 "[-d|-?|-h] \"ex[ress\"\n"
-                "²ÎÊı:\n\t-d\t¿ªÆôµ÷ÊÔÄ£Ê½\n"
-                "\t-?,-h\tÏÔÊ¾°ïÖú\n"
-                "\texpress\tÖ´ĞĞ±í´ïÊ½\n"
+                "å‚æ•°:\n\t-d\tå¼€å¯è°ƒè¯•æ¨¡å¼\n"
+                "\t-?,-h\tæ˜¾ç¤ºå¸®åŠ©\n"
+                "\texpress\tæ‰§è¡Œè¡¨è¾¾å¼\n"
             );
         }
-        // ½Å±¾ÓïÑÔ°ïÖú
+        // è„šæœ¬è¯­è¨€å¸®åŠ©
         void scriptHelp() {}
-        // ¿ìËÙËæ»úÊıÉú³É
-        // ²ÎÊı£ºd¾«¶ÈÏŞÖÆ num0µÚÒ»¸öÊı×ÖµÄ×Ö·û´®
+        // å¿«é€Ÿéšæœºæ•°ç”Ÿæˆ
+        // å‚æ•°ï¼šdç²¾åº¦é™åˆ¶ num0ç¬¬ä¸€ä¸ªæ•°å­—çš„å­—ç¬¦ä¸²
         void quickRndGen(int d, char *num0) {
             using namespace Module;
             Split *argSet = state.Args;
-            // Ô­Ê¼²ÎÊı
+            // åŸå§‹å‚æ•°
             char *s[3] = {num0, argSet->SplitByChar(' ', false), argSet->SplitByChar(' ', false)};
-            // ÊÇ·ñÎª¸¡µãÊı
+            // æ˜¯å¦ä¸ºæµ®ç‚¹æ•°
             bool isfloat = false;
             if((s[0] && strchr(s[0], '.')) || (s[1] && strchr(s[1], '.'))) isfloat = true;
-            // ÀàĞÍ×ª»» Ä¬ÈÏÖµÌî³ä ±£Ö¤a<b
+            // ç±»å‹è½¬æ¢ é»˜è®¤å€¼å¡«å…… ä¿è¯a<b
             int n = s[2]? atoi(s[2]): 1;
-            if(n==0) return; // ÎŞÊä³öÖ±½Ó·µ»Ø
+            if(n==0) return; // æ— è¾“å‡ºç›´æ¥è¿”å›
             union {int i; double d;} a, b;
-            int ti; double td; // ÁÙÊ±±äÁ¿
+            int ti; double td; // ä¸´æ—¶å˜é‡
             if(isfloat) {
                 a.d = s[0]? atof(s[0]): 1.0, b.d = s[1]? atof(s[1]): 100.0;
                 if(a.d>b.d) td = a.d, a.d = b.d, b.d = td; // swap
@@ -750,7 +750,7 @@ namespace Core {
                 a.i = s[0]? atoi(s[0]): 1, b.i = s[1]? atoi(s[1]): 100;
                 if(a.i>b.i) ti = a.i, a.i = b.i, b.i = ti; // swap
             }
-            // ¾«¶ÈÏŞÖÆ ºÏ³Éprintf²ÎÊı
+            // ç²¾åº¦é™åˆ¶ åˆæˆprintfå‚æ•°
             char pfarg[8]; 
             if(d<0 || d>15) strcpy(pfarg, "%f%c");
             else sprintf(pfarg,"%%.%df%%c", d);
@@ -764,44 +764,44 @@ namespace Core {
                 if(n<0) printf("%d\n", Dice.irs(a.i, b.i, -n));
                 else for(int i=0, z=n>0? n: -n; i<z; ++i) printf("%d%c", Dice.ir(a.i, b.i), i==z-1? '\n': ' ');
         }
-        // ¼ÆËã½Å±¾½âÊÍ
+        // è®¡ç®—è„šæœ¬è§£é‡Š
         void eval() {}
-        /* ÄÚÖÃÄ£¿é */
-        // osuËæ»úÊı¼ÓÈ¨·ÖÊı¼ÆËã
+        /* å†…ç½®æ¨¡å— */
+        // osuéšæœºæ•°åŠ æƒåˆ†æ•°è®¡ç®—
         void osucModule() {
-            // ¹«Ê½£º Score = osu_score * rnd(avg(ACCs), MAX_RND_RATIO)
+            // å…¬å¼ï¼š Score = osu_score * rnd(avg(ACCs), MAX_RND_RATIO)
             // .tl osuc 1122223333,0.9743,1122333344,0.9801,1122334444,0.9856
             // .tl osuc 2434779,0.9409,2538793,0.9672,2657600,1
             using namespace Module;
-            const static double MAX_RND_RATIO = 1.05; // Ëæ»úÊı×î´óÖµ
+            const static double MAX_RND_RATIO = 1.05; // éšæœºæ•°æœ€å¤§å€¼
 
             std::vector<double> arg;
             Split *argSet = state.Args;
             char *s;
-            while(s = argSet->SplitByChar(',', false)) // ÔØÈë²ÎÊı s!=NULLÔòpush
+            while(s = argSet->SplitByChar(',', false)) // è½½å…¥å‚æ•° s!=NULLåˆ™push
                 arg.push_back(atof(s));
             int n = arg.size();
-            if(n==0 || n%2==1) throw OrderSyntaxException(); // ²»ÎªÅ¼Êı¸ö²ÎÊıÔò±¨´í
-            printf("--µ±Ç°¹«Ê½£ºScore = osu_score * rnd(avg(ACCs), %.2f)\n", MAX_RND_RATIO);
-            // ÇóÆ½¾ùACC
+            if(n==0 || n%2==1) throw OrderSyntaxException(); // ä¸ä¸ºå¶æ•°ä¸ªå‚æ•°åˆ™æŠ¥é”™
+            printf("--å½“å‰å…¬å¼ï¼šScore = osu_score * rnd(avg(ACCs), %.2f)\n", MAX_RND_RATIO);
+            // æ±‚å¹³å‡ACC
             double avg_acc = 0;
             for(int i=1; i<n; i+=2) avg_acc += arg[i];
             avg_acc /= n/2.0;
-            printf("--ACCÆ½¾ùÖµ£º%f\n", avg_acc);
-            // ¼ÆËã½á¹û
+            printf("--ACCå¹³å‡å€¼ï¼š%f\n", avg_acc);
+            // è®¡ç®—ç»“æœ
             for(int i=0; i<n; i+=2) {
                 double origin = arg[i], rnd = Dice.fr(avg_acc, MAX_RND_RATIO), score = origin*rnd;
-                printf("µÚ%dÎ»Íæ¼ÒµÄ¼ÓÈ¨·ÖÊı£º%f\t(Ô­Ê¼·Ö£º%d, ACC£º%f, È¨Êı£º%f)\n", i/2+1, score, (int)origin, arg[i+1], rnd);
+                printf("ç¬¬%dä½ç©å®¶çš„åŠ æƒåˆ†æ•°ï¼š%f\t(åŸå§‹åˆ†ï¼š%d, ACCï¼š%f, æƒæ•°ï¼š%f)\n", i/2+1, score, (int)origin, arg[i+1], rnd);
             }
         }
-        // Base64/Baseplus64¼Ó½âÃÜ£¨½Ó¿Ú£©
+        // Base64/Baseplus64åŠ è§£å¯†ï¼ˆæ¥å£ï¼‰
         // TEST .tl b64x acefdb,"QWERTYUIOPASDFGHJKLZXCVBNM123456789qwertyuiopasdfghjklzxcvbnm123456789","lzstupid"
         void base64xModule() {
             using namespace Module;
             Split *argSet = state.Args;
             char *flag = argSet->SplitByChar(',', false);
             if(!flag) throw OrderSyntaxException();
-            // »ñÈ¡strºÍÈ¥Ë«ÒıºÅ
+            // è·å–strå’Œå»åŒå¼•å·
             char *str = argSet->SplitByChar(',', true);
             Trim(str);
             int sLen = strlen(str);
@@ -809,7 +809,7 @@ namespace Core {
                 str[sLen-1] = '\0';
                 str = &str[1];
             }
-            // ³¢ÊÔ»ñÈ¡pwdºÍÈ¥Ë«ÒıºÅ
+            // å°è¯•è·å–pwdå’Œå»åŒå¼•å·
             char *pwd = argSet->SplitByChar(',', true);
             int pLen = strlen(pwd);
             Trim(pwd);
@@ -817,7 +817,7 @@ namespace Core {
                 pwd[pLen-1] = '\0';
                 pwd = &pwd[1];
             }
-            // Ö´ĞĞflag
+            // æ‰§è¡Œflag
             Baseplus64Code basex(str);
             for(int i=0,n=strlen(flag); i<n; ++i) {
                 if(flag[i]=='a') basex.Base64Encode();
@@ -835,28 +835,28 @@ namespace Core {
                 else if(isspace(flag[i]));
                 else throw OrderSyntaxException();
             }
-            // Êä³ö
+            // è¾“å‡º
             puts(basex.GetResult().c_str());
         }
     public:
         UI_v1c() {
-            // ³õÊ¼»¯
+            // åˆå§‹åŒ–
             state.StrictMode = false;
             state.DebugMode = false;
             state.ColonOrderMode = false;
             state.ConsoleMode = false;
             state.Args = NULL;
         }
-        // Æô¶¯
+        // å¯åŠ¨
         void Start() {
             using namespace Module;
             if(!state.ConsoleMode)
-                puts("RandRange " RNDRG_VERSION "\nÊäÈë.h²é¿´°ïÖú\n³ÌĞòÖ§³ÖÃüÁîĞĞ²ÎÊıÆô¶¯\n");
+                puts("RandRange " RNDRG_VERSION "\nè¾“å…¥.hæŸ¥çœ‹å¸®åŠ©\nç¨‹åºæ”¯æŒå‘½ä»¤è¡Œå‚æ•°å¯åŠ¨\n");
             while(true) {
                 if(!state.ConsoleMode) {
                     printf("> ");
                     state.InputBuffer[0] = '\0';
-                    // ÊäÈë
+                    // è¾“å…¥
                     fgets(state.InputBuffer, IN_BUF_LEN, stdin);
                 }
                 Trim(state.InputBuffer);
@@ -864,16 +864,16 @@ namespace Core {
                 try {
                     switch(parseIns()) {
                         case PROGRAM_EXIT:
-                            delete state.Args; // Ïú»ÙArgs
-                            return; // ÍË³ö
+                            delete state.Args; // é”€æ¯Args
+                            return; // é€€å‡º
                     }
                 } catch(ErrorCodeException &e) {
                     puts(e.what());
                 }
-                delete state.Args; // Ïú»ÙArgs
+                delete state.Args; // é”€æ¯Args
             }
         }
-        // Ö¸Áî½âÎö
+        // æŒ‡ä»¤è§£æ
         int parseIns() {
             using namespace Module;
             Split *argSet = state.Args;
@@ -882,10 +882,10 @@ namespace Core {
                 if(arg[0]=='#') ; // continue
                 else if((!state.ColonOrderMode && arg[0]=='.' && !isdigit(arg[1])) || (state.ColonOrderMode && arg[0]==':'))
                 {
-                    /* ÃüÁîÄ£Ê½ */
-                    // ÍË³ö
+                    /* å‘½ä»¤æ¨¡å¼ */
+                    // é€€å‡º
                     if(arg[1]=='q') return PROGRAM_EXIT;
-                    // °ïÖú
+                    // å¸®åŠ©
                     else if(arg[1]=='h') {
                         if(arg[2]=='\0') orderHelp();
                         else if(arg[2]=='c' && arg[3]=='\0') CLIHelp();
@@ -893,36 +893,36 @@ namespace Core {
                         else if(arg[2]=='s' && arg[3]=='\0') scriptHelp();
                         else throw InvalidOrderException();
                     }
-                    // ½Å±¾½âÊÍ
+                    // è„šæœ¬è§£é‡Š
                     else if(arg[1]=='r' && arg[2]=='\0') eval();
-                    // Ëæ»úÊıÉú³É(Êä³ö¾«¶ÈÏŞÖÆ)
+                    // éšæœºæ•°ç”Ÿæˆ(è¾“å‡ºç²¾åº¦é™åˆ¶)
                     else if(arg[1]=='p' && arg[2]=='l' && arg[3]=='\0') {
                         char *d = state.Args->SplitByChar(' ', false);
                         if(!d) throw OrderSyntaxException();
                         quickRndGen(atoi(d), argSet->SplitByChar(' ', false));
                     }
-                    // ÉèÖÃ»·¾³Ä£Ê½
+                    // è®¾ç½®ç¯å¢ƒæ¨¡å¼
                     else if(arg[1]=='m')
                         for(int i=2; arg[i]; ++i) {
                             char c = arg[i];
                             switch(c) {
                                 case 's':
                                     state.StrictMode = !state.StrictMode;
-                                    printf("%sÑÏ¸ñÄ£Ê½\n", state.StrictMode? "¿ªÆô": "¹Ø±Õ");
+                                    printf("%sä¸¥æ ¼æ¨¡å¼\n", state.StrictMode? "å¼€å¯": "å…³é—­");
                                     break;
                                 case 'c':
                                     state.ColonOrderMode = !state.ColonOrderMode;
-                                    printf("%sÃ°ºÅÃüÁîÄ£Ê½\n", state.ColonOrderMode? "¿ªÆô": "¹Ø±Õ");
+                                    printf("%så†’å·å‘½ä»¤æ¨¡å¼\n", state.ColonOrderMode? "å¼€å¯": "å…³é—­");
                                     break;
                                 case 'd':
                                     state.DebugMode = !state.DebugMode;
-                                    printf("%sµ÷ÊÔÄ£Ê½\n", state.DebugMode? "¿ªÆô": "¹Ø±Õ");
+                                    printf("%sè°ƒè¯•æ¨¡å¼\n", state.DebugMode? "å¼€å¯": "å…³é—­");
                                     break;
                                 default:
                                     if(!isspace(c)) throw InvalidOrderException();
                             }
                         }
-                    // »ñÈ¡/ÉèÖÃËæ»úÊıÖÖ×Ó
+                    // è·å–/è®¾ç½®éšæœºæ•°ç§å­
                     else if(arg[1]=='s' && arg[2]=='d' && arg[3]=='\0') {
                         char *s = argSet->SplitByChar(' ', false);
                         unsigned int sd;
@@ -930,9 +930,9 @@ namespace Core {
                             sscanf(s, "%u", &sd);
                             Dice.Seed(sd);
                         }
-                        printf("µ±Ç°ÖÖ×ÓÖµ£º%u\n", Dice.Seed());
+                        printf("å½“å‰ç§å­å€¼ï¼š%u\n", Dice.Seed());
                     }
-                    // ÄÚÖÃ¹¤¾ß
+                    // å†…ç½®å·¥å…·
                     else if(arg[1]=='t' && arg[2]=='l' && arg[3]=='\0') {
                         char *tool = argSet->SplitByChar(' ', false);
                         if(!strcmp(tool, "osuc"))
@@ -956,21 +956,21 @@ namespace Core {
 
     }; // class UI_v1c
 
-    // ÃüÁîĞĞ²ÎÊı½âÎö
-    // ·µ»ØÖµ£ºtrue Æô¶¯³ÌĞò false ½âÊÍÍê²ÎÊı¼´ÍË³ö
+    // å‘½ä»¤è¡Œå‚æ•°è§£æ
+    // è¿”å›å€¼ï¼štrue å¯åŠ¨ç¨‹åº false è§£é‡Šå®Œå‚æ•°å³é€€å‡º
     // BUG
     /*bool CmdArgsParser(UI_v1c &UI, int &argc, char **&argv) {
         for(int i=1; i<argc; ++i) {
             char *arg = argv[i];
             if(arg[0]=='-')
-                if(arg[1]=='d') // µ÷ÊÔÄ£Ê½
+                if(arg[1]=='d') // è°ƒè¯•æ¨¡å¼
                     UI.state.DebugMode = true;
                 if(arg[1]=='h' || arg[1]=='?') {
                     UI.CLIHelp();
                     goto EndFunc;
                 }
             else {
-                // ²ÎÊıÎª±í´ïÊ½£¬»òÖ¸Áî²ÎÊı¡¾Î´ÆôÓÃ¡¿
+                // å‚æ•°ä¸ºè¡¨è¾¾å¼ï¼Œæˆ–æŒ‡ä»¤å‚æ•°ã€æœªå¯ç”¨ã€‘
                 UI.state.ConsoleMode = true;
                 strcpy(UI.state.InputBuffer, arg);
             }
@@ -988,45 +988,45 @@ int main(int argc, char **argv) {
 }
 
 /*
-1.6°æ½øÒ»²½Ä£¿é»¯¡¢½Ó¿Ú»¯
-1.7°æĞÂÔöÄÚÈİ
-.r ±í´ïÊ½¼ÆËã
+1.6ç‰ˆè¿›ä¸€æ­¥æ¨¡å—åŒ–ã€æ¥å£åŒ–
+1.7ç‰ˆæ–°å¢å†…å®¹
+.r è¡¨è¾¾å¼è®¡ç®—
 
-ËÄÔòÔËËã(+ - * / % **£¨Ãİ£© //£¨Õû³ı£©)
-×Ö·û´®Êä³ö
-    ..×Ö·û´®Á¬½Ó
-    \ ×ªÒå
-±äÁ¿¶ÁÈ¡ [1]
-±äÁ¿´æ´¢ :[1]
-    Ö§³Ö±äÁ¿×Ô¼Ó×Ô¼õµÈ :+ :- ...
-    [1]·Ç¸ºÕûÊıÈ«¾Ö±äÁ¿
-    Î´ÆôÓÃ£º[-1]Õ»
-        Î´ÆôÓÃ£ºpop push / popt(Î²) poph£¨Í·£©...
-    Î´ÆôÓÃ£º[1i]Ç¿ÖÆ×ª»»Îªint£¬[1f]Ç¿ÖÆ×ª»»Îªdouble
-    Î´ÆôÓÃ£ºnilÎŞĞ§Öµ
-    ÒÑÆúÓÃ£º@:±íÊ¾²»Êä³ö½á¹û´æ´¢
-nD[a~]b[~d]Ëæ»úÊı±í´ïÊ½
-#×¢ÊÍ
-    Î´ÆôÓÃ£º@# ½á¹ûºóÊä³ö×¢ÊÍ
-    Î´ÆôÓÃ£º#* *# ¿é×¢ÊÍ
-;Óï¾äÁ¬½Ó·û
- _ ĞøĞĞ·û
-Î´ÆôÓÃ£ºif Ìõ¼ş{}elif Ìõ¼ş{}...else{}
-Î´ÆôÓÃ£º
-    1) select ±í´ïÊ½ case [is ÔËËã·û] ±í´ïÊ½{}...[default{}] # case defaultÖÁÉÙÓĞÒ»
-    2) select ±í´ïÊ½ {case [is ÔËËã·û] ±í´ïÊ½[;] ...[;] default[;] ... }
-Î´ÆôÓÃ£ºwhile Ìõ¼ş{}
-Î´ÆôÓÃ£ºfor Ç°ÖÃ;Ìõ¼ş;ºóĞø{}
-Î´ÆôÓÃ£ºforc ±äÁ¿(ÆğÊ¼,½áÊø,[²½·ù]),...{} #for next / for count
-Î´ÆôÓÃ£ºiif(Ìõ¼ş,true·µ»Ø,false·µ»Ø)
-Î´ÆôÓÃ£ºsub/fnc º¯ÊıÃû
-Î´ÆôÓÃ£ºlabel:[;] goto
-Î´ÆôÓÃ£ºÂß¼­ÔËËã·û£ºnot and or > < <= >= <>£¨²»µÈ£©
-Î´ÆôÓÃ£ºÎ»ÔËËã·û£º<< >> !£¨°´Î»È¡·´£© & | ^£¨°´Î»Òì»ò£©
-Î´ÆôÓÃ£ºbreak continue£¨ÔÚselectÖĞÆğ´©Í¸×÷ÓÃ£© return
-Î´ÆôÓÃ£º@ Ïò½âÊÍÆ÷·¢ËÍÖ¸Áî
-Î´ÆôÓÃ£º@@ µ±Ç°Óï¾ä²»Êä³ö
-Î´ÆôÓÃ£º@varn [preserve] size Ô¤·ÖÅäÈ«²¿±äÁ¿×î´óÊıÁ¿ #Ä¬ÈÏ256
+å››åˆ™è¿ç®—(+ - * / % **ï¼ˆå¹‚ï¼‰ //ï¼ˆæ•´é™¤ï¼‰)
+å­—ç¬¦ä¸²è¾“å‡º
+    ..å­—ç¬¦ä¸²è¿æ¥
+    \ è½¬ä¹‰
+å˜é‡è¯»å– [1]
+å˜é‡å­˜å‚¨ :[1]
+    æ”¯æŒå˜é‡è‡ªåŠ è‡ªå‡ç­‰ :+ :- ...
+    [1]éè´Ÿæ•´æ•°å…¨å±€å˜é‡
+    æœªå¯ç”¨ï¼š[-1]æ ˆ
+        æœªå¯ç”¨ï¼špop push / popt(å°¾) pophï¼ˆå¤´ï¼‰...
+    æœªå¯ç”¨ï¼š[1i]å¼ºåˆ¶è½¬æ¢ä¸ºintï¼Œ[1f]å¼ºåˆ¶è½¬æ¢ä¸ºdouble
+    æœªå¯ç”¨ï¼šnilæ— æ•ˆå€¼
+    å·²å¼ƒç”¨ï¼š@:è¡¨ç¤ºä¸è¾“å‡ºç»“æœå­˜å‚¨
+nD[a~]b[~d]éšæœºæ•°è¡¨è¾¾å¼
+#æ³¨é‡Š
+    æœªå¯ç”¨ï¼š@# ç»“æœåè¾“å‡ºæ³¨é‡Š
+    æœªå¯ç”¨ï¼š#* *# å—æ³¨é‡Š
+;è¯­å¥è¿æ¥ç¬¦
+ _ ç»­è¡Œç¬¦
+æœªå¯ç”¨ï¼šif æ¡ä»¶{}elif æ¡ä»¶{}...else{}
+æœªå¯ç”¨ï¼š
+    1) select è¡¨è¾¾å¼ case [is è¿ç®—ç¬¦] è¡¨è¾¾å¼{}...[default{}] # case defaultè‡³å°‘æœ‰ä¸€
+    2) select è¡¨è¾¾å¼ {case [is è¿ç®—ç¬¦] è¡¨è¾¾å¼[;] ...[;] default[;] ... }
+æœªå¯ç”¨ï¼šwhile æ¡ä»¶{}
+æœªå¯ç”¨ï¼šfor å‰ç½®;æ¡ä»¶;åç»­{}
+æœªå¯ç”¨ï¼šforc å˜é‡(èµ·å§‹,ç»“æŸ,[æ­¥å¹…]),...{} #for next / for count
+æœªå¯ç”¨ï¼šiif(æ¡ä»¶,trueè¿”å›,falseè¿”å›)
+æœªå¯ç”¨ï¼šsub/fnc å‡½æ•°å
+æœªå¯ç”¨ï¼šlabel:[;] goto
+æœªå¯ç”¨ï¼šé€»è¾‘è¿ç®—ç¬¦ï¼šnot and or > < <= >= <>ï¼ˆä¸ç­‰ï¼‰
+æœªå¯ç”¨ï¼šä½è¿ç®—ç¬¦ï¼š<< >> !ï¼ˆæŒ‰ä½å–åï¼‰ & | ^ï¼ˆæŒ‰ä½å¼‚æˆ–ï¼‰
+æœªå¯ç”¨ï¼šbreak continueï¼ˆåœ¨selectä¸­èµ·ç©¿é€ä½œç”¨ï¼‰ return
+æœªå¯ç”¨ï¼š@ å‘è§£é‡Šå™¨å‘é€æŒ‡ä»¤
+æœªå¯ç”¨ï¼š@@ å½“å‰è¯­å¥ä¸è¾“å‡º
+æœªå¯ç”¨ï¼š@varn [preserve] size é¢„åˆ†é…å…¨éƒ¨å˜é‡æœ€å¤§æ•°é‡ #é»˜è®¤256
 */
 
 /*
@@ -1034,22 +1034,22 @@ sub main(){
     999:[1]
     1+1d(1d5)~10:[2]
     "string"
-    "val of [1]:"..[1] #Êä³övar of [1]:999
+    "val of [1]:"..[1] #è¾“å‡ºvar of [1]:999
     add([1],1):[3]
     if [3]==1000 {
         0:[4]
         for [4]<3{
-            [3] #Êä³ö3´Î1000
+            [3] #è¾“å‡º3æ¬¡1000
         }
         0:[4]
         for{
             if [4]==3{break}
             [3]
-            1:+[4] # ×Ô¼Ó1
-        }# Ğ§¹ûÍ¬ÉÏ
+            1:+[4] # è‡ªåŠ 1
+        }# æ•ˆæœåŒä¸Š
         for [5]::(1,3,1){ # for [5]=1 to 3 step 1
-            iif(1,[3],"false") # ?:ÈıÄ¿ÔËËã·û
-        }# Ğ§¹ûÍ¬ÉÏ
+            iif(1,[3],"false") # ?:ä¸‰ç›®è¿ç®—ç¬¦
+        }# æ•ˆæœåŒä¸Š
     }
 }
 fnc add(){
